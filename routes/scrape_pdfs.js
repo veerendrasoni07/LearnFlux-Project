@@ -34,7 +34,7 @@ const fetchPdfLinks = async (query)=>{
                     links.push(href);
                 }
             }
-    });
+        });
 
         return links.slice(0,10);
 
