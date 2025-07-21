@@ -66,6 +66,7 @@ scrapeRouter.get('/api/fetch-pdfs',async(req,res)=>{
             'pdflinks': links
         });    
         
+        
         res.status(200).json(links);
 
     } catch (error) {
