@@ -28,10 +28,12 @@ const fetchPdfLinks = async (query)=>{
 
          $("a").each((i, el) => {
             const href = $(el).attr("href");
-            if (href) {
-                // Relaxed filter to check if it likely points to a PDF
-                if (href.includes(".pdf")) {
-                    links.push(href);
+            if (href && href.includes('.pdf')) {
+                // extract the actual link from the duckduckgo
+                const parsed = new URL('https:'+href);
+                const actualLink = decodeURIComponent(parsed.searchParams.get("uddg")||"");
+                if(actualLink.includes('.pdf')){
+                    links.push(actualLink);
                 }
             }
         });
@@ -66,7 +68,7 @@ scrapeRouter.get('/api/fetch-pdfs',async(req,res)=>{
             'pdflinks': links
         });    
         
-        
+
         res.status(200).json(links);
 
     } catch (error) {
