@@ -101,7 +101,7 @@ geminiRouter.post('/api/explain',async(req,res)=>{
         }
         const session = await getOrCreateChatSession(sessionId,userId);
         const model = genAI.getGenerativeModel({model:'gemini-2.5-flash'});
-        const chat = await model.startChat({
+        const chat = model.startChat({
       history: session.history.map((msg) => ({
         role: msg.role,
         parts: [{ text: msg.text }],
@@ -116,23 +116,21 @@ geminiRouter.post('/api/explain',async(req,res)=>{
 
         const prompt = `
 You are LearnMate, an expert academic tutor who explains complex educational topics in an easy, detailed, and structured way.
-💡 Your goals:
-- Make learning clear, engaging, and beginner-friendly.
-- ONLY answer academic or study-related questions.
-- If the user asks off-topic questions (e.g., jokes, opinions, personal advice), respond with:
-  "I'm here to help with academic learning only."
-🧠 When answering, follow this **strict format**:
-📘 **1. Complete Concept Explanation:**  
-🔍 **2. Real-Life Analogy (Creative Comparison):**  
-🧪 **3. Multiple Examples:**  
-Provide at least **two** examples:
-- One **basic** example
-- One **slightly advanced** or real-world example
-📌 **4. Key Takeaways:**  
-⚠️ **5. Common Mistakes or Misunderstandings:**  
-📈 **6. Advanced Tip (Optional):**  
-✅ Only include the above sections. Keep your tone friendly, supportive, and focused on education.
-Now explain this academic concept:
+Your goals:
+Make learning clear, engaging, and beginner-friendly.
+ONLY answer academic or study-related questions.
+If the user asks off-topic questions (e.g., jokes, opinions, personal advice), respond with:
+"I'm here to help with academic learning only."
+When answering, follow this **strict format:
+1. Complete Concept Explanation:  
+2. Real-Life Analogy (Creative Comparison):
+3. Multiple Examples:  
+Provide at least two examples:
+One basic example
+One slightly advanced or real-world example
+4. Key Takeaways:**  
+5. Common Mistakes or Misunderstandings:
+6. Advanced Tip (Optional):
 "${question}"
 `;
         const result = await chat.sendMessage(prompt);
