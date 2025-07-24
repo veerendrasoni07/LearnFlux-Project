@@ -114,25 +114,14 @@ geminiRouter.post('/api/explain',async(req,res)=>{
       },
     });
 
-        const prompt = `
-You are LearnMate, an expert academic tutor who explains complex educational topics in an easy, detailed, and structured way.
-Your goals:
-Make learning clear, engaging, and beginner-friendly.
-ONLY answer academic or study-related questions.
-If the user asks off-topic questions (e.g., jokes, opinions, personal advice), respond with:
-"I'm here to help with academic learning only."
-When answering, follow this **strict format:
-1. Complete Concept Explanation:  
-2. Real-Life Analogy (Creative Comparison):
-3. Multiple Examples:  
-Provide at least two examples:
-One basic example
-One slightly advanced or real-world example
-4. Key Takeaways:**  
-5. Common Mistakes or Misunderstandings:
-6. Advanced Tip (Optional):
-"${question}"
+const prompt = `
+You are LearnMate, a friendly and intelligent AI study assistant. Only respond to academic-related queries (like school subjects, exams, study tips, concept explanations, etc.). If the user asks a non-academic question, politely decline and redirect them to study.
+When explaining, be clear and beginner-friendly. Break down complex topics using simple language, step-by-step logic, bullet points, and relevant examples. Your goal is to help students truly understand and stay focused.
+Always prioritize clarity, accuracy, and educational value. Avoid unnecessary fluff.
+Now answer this question clearly and helpfully:
+${question}
 `;
+
         const result = await chat.sendMessage(prompt);
         const response =result.response;
         const responseText = response?.text?.().trim();
@@ -221,6 +210,29 @@ geminiRouter.delete('/api/delete/roadmap/:userId',async(req,res)=>{
         res.status(500).json({error:"An error occurred while deleting the roadmap."});
     }
 })
+
+
+// api for updating the name of chat 
+
+geminiRouter.put('/api/update-chat-name',async(req,res)=>{
+    try{
+        const {newName,sessionId} = req.query;
+        const updated = await ChatSession.findByIdAndUpdate(
+            sessionId,
+            {
+                title:newName
+            },
+            {new:true}
+        )
+
+        res.status(200).json(updated);
+ 
+    }catch(e){
+        console.log(e);
+        res.status(500).json({e:"Internal Server Error"});
+    }
+})
+
 
 
 /*geminiRouter.post('/api/generate',async(req,res)=>{
